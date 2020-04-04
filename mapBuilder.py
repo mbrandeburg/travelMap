@@ -34,7 +34,6 @@ def addTrip(df,country, yearWent):
     if counter == 1:
         for item in dfCountryList:
             if country in item:
-                # print(df[df['Country'] == item])
                 indexValue = df[df['Country'] == item].index[0]
                 prevItems = df['Year Went'][df['Country'] == item]
                 newlist = list()
