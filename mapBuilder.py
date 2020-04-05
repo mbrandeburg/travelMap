@@ -7,7 +7,7 @@ def buildDF():
     initialDF['Have Been'] = 0
     initialDF['Year Went'] = 'N/A'
 
-    initialDF['Have Been'][initialDF['Code'] == 'USA'] = 10 ## Infinity value
+    initialDF['Have Been'][initialDF['Code'] == 'USA'] = 5 ## Infinity value
     initialDF['Year Went'][initialDF['Code'] == 'USA'] = 'Home'
 
     ''' TODO: this will get replciated in another page we interact with for 
@@ -16,8 +16,18 @@ def buildDF():
     datetime.now().year 
     '''
     ## Add Base Trips 
+    initialDF = addTrip(initialDF,'Bahamas', 2006)
     initialDF = addTrip(initialDF,'Mexico', 2007)
+    initialDF = addTrip(initialDF,'Jamaica', 2007)
+    initialDF = addTrip(initialDF,'Cayman Islands', 2007)
+    initialDF = addTrip(initialDF,'Italy', 2009)
+    initialDF = addTrip(initialDF,'Vatican City', 2009)
+    initialDF = addTrip(initialDF,'Greece', 2009)
+
     initialDF = addTrip(initialDF,'Mexico', 2013)
+
+    initialDF = addTrip(initialDF,'Italy', 2016)
+    initialDF = addTrip(initialDF,'Vatican City', 2016)
 
     return initialDF
 
