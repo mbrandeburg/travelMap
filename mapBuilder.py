@@ -59,11 +59,12 @@ def addTrip(df,country, yearWent):
         print('\n WARNING: EMPLOYING FUZZY MATCH.')
         highest = process.extractOne(country,dfCountryList)
         print('Currently adding {}, the match to entry {} with a probability of {}.\n'.format(highest[0], country, highest[1]))
+        fuzzyCounter = 0
         for item in dfCountryList:
             if highest[0] in item:
-                counter += 1
+                fuzzyCounter += 1
                 countryOptions.append(item)
-        if counter == 1:
+        if fuzzyCounter == 1:
             for item in dfCountryList:
                 if highest[0] in item:
                     indexValue = df[df['Country'] == item].index[0]
@@ -76,7 +77,7 @@ def addTrip(df,country, yearWent):
                     newlist.append(yearWent)
                     df.at[indexValue, 'Year Went'] = newlist
                     df['Have Been'][df['Country'] == item] = len(newlist)
-        elif counter == 0:
+        elif fuzzyCounter == 0:
             print('The country ** {} ** was not recognized. Please check spelling and try again. (The closest match was {})'.format(country,highest[0]))
             exit(1)
     else:
