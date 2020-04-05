@@ -20,7 +20,7 @@ def buildDF():
     initialDF = addTrip(initialDF,'Bahamas', 2006)
     initialDF = addTrip(initialDF,'Mexico', 2007)
     initialDF = addTrip(initialDF,'Jamaica', 2007)
-    initialDF = addTrip(initialDF,'Cayman Islands', 2007)
+    initialDF = addTrip(initialDF,'Cayman Islads', 2007)
     initialDF = addTrip(initialDF,'Italy', 2009)
     initialDF = addTrip(initialDF,'Vatican', 2009)
     initialDF = addTrip(initialDF,'Greece', 2009)
