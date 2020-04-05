@@ -130,6 +130,7 @@ def buildMap():
     fig = px.choropleth(initiallyPopulatedDF, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=px.colors.sequential.Mint) #["green",'yellow','orange',"red"]) #px.colors.sequential.Plasma)
     fig.update_layout(
         title = "Places I've Been",
+        coloraxis_showscale=False,
         ## If I want to disable Automargins
         # width=1500,
         # height=1300,
