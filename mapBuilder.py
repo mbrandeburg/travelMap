@@ -1,6 +1,7 @@
 ## Map builder using plotly
 import pandas as pd
 import plotly.express as px
+from fuzzywuzzy import process
 
 def buildDF():
     initialDF = pd.read_csv('countryCodes.csv')
@@ -21,7 +22,7 @@ def buildDF():
     initialDF = addTrip(initialDF,'Jamaica', 2007)
     initialDF = addTrip(initialDF,'Cayman Islands', 2007)
     initialDF = addTrip(initialDF,'Italy', 2009)
-    initialDF = addTrip(initialDF,'Vatican City', 2009)
+    initialDF = addTrip(initialDF,'Vatican', 2009)
     initialDF = addTrip(initialDF,'Greece', 2009)
 
     initialDF = addTrip(initialDF,'Mexico', 2013)
@@ -54,14 +55,41 @@ def addTrip(df,country, yearWent):
                 newlist.append(yearWent)
                 df.at[indexValue, 'Year Went'] = newlist
                 df['Have Been'][df['Country'] == item] = len(newlist)
+    elif counter == 0:
+        print('\n WARNING: EMPLOYING FUZZY MATCH.')
+        highest = process.extractOne(country,dfCountryList)
+        print('Currently adding {}, the match to entry {} with a probability of {}.\n'.format(highest[0], country, highest[1]))
+        for item in dfCountryList:
+            if highest[0] in item:
+                counter += 1
+                countryOptions.append(item)
+        if counter == 1:
+            for item in dfCountryList:
+                if highest[0] in item:
+                    indexValue = df[df['Country'] == item].index[0]
+                    prevItems = df['Year Went'][df['Country'] == item]
+                    newlist = list()
+                    for foundItem in prevItems:
+                        if foundItem != 'N/A':
+                            for superFoundItem in foundItem:
+                                newlist.append(superFoundItem)
+                    newlist.append(yearWent)
+                    df.at[indexValue, 'Year Went'] = newlist
+                    df['Have Been'][df['Country'] == item] = len(newlist)
+        elif counter == 0:
+            print('The country ** {} ** was not recognized. Please check spelling and try again. (The closest match was {})'.format(country,highest[0]))
+            exit(1)
     else:
         print('Unfortunately more than one country can meet the name given. Please specify between the following: ', *countryOptions, sep='\n- ')
+        exit(1)
 
     return df
 
 
+##  Render everything
 def buildMap():
     initiallyPopulatedDF = buildDF()
+    initiallyPopulatedDF.to_csv('initiallyPopulated.csv')
     fig = px.choropleth(initiallyPopulatedDF, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=px.colors.sequential.Mint) #["green",'yellow','orange',"red"]) #px.colors.sequential.Plasma)
     fig.update_layout(
         title = "Places I've Been",
