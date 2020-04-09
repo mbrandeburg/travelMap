@@ -65,7 +65,6 @@ def buildDF():
     initialDF.to_csv('initiallyPopulated.csv', index=False)
     return initialDF
 
-
 def addTrip(country, yearWent):
     df = pd.read_csv('initiallyPopulated.csv')
     dfCountryList = df['Country'].tolist()
@@ -84,9 +83,14 @@ def addTrip(country, yearWent):
                 newlist = list()
                 for foundItem in prevItems:
                     if foundItem != 'N/A':
-                        for superFoundItem in foundItem:
-                            newlist.append(superFoundItem)
+                        if ',' in foundItem:
+                            newSplit = foundItem.split(',')
+                            for foundSplit in newSplit:
+                                newlist.append(foundSplit.replace('[','').replace(']','').replace("'",'')) #.replace(" ","")
+                        else:
+                            newlist.append(foundItem.replace('[','').replace(']','').replace("'",''))
                 newlist.append(yearWent)
+                # print(newlist, len(newlist))
                 df.at[indexValue, 'Year Went'] = newlist
                 df['Have Been'][df['Country'] == item] = len(newlist)
     elif counter == 0:
@@ -107,8 +111,12 @@ def addTrip(country, yearWent):
                     newlist = list()
                     for foundItem in prevItems:
                         if foundItem != 'N/A':
-                            for superFoundItem in foundItem:
-                                newlist.append(superFoundItem)
+                            if ',' in foundItem:
+                                newSplit = foundItem.split(',')
+                                for foundSplit in newSplit:
+                                    newlist.append(foundSplit.replace('[','').replace(']','').replace("'",'')) #.replace(" ","")
+                            else:
+                                newlist.append(foundItem.replace('[','').replace(']','').replace("'",''))
                     newlist.append(yearWent)
                     df.at[indexValue, 'Year Went'] = newlist
                     df['Have Been'][df['Country'] == item] = len(newlist)
