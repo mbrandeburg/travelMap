@@ -1,0 +1,59 @@
+{% extends "bootstrap/base.html" %}
+{% block content %}
+{% block styles %}
+  {{super()}}
+<head>
+    <title>Places I've Been Map</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+</head>
+{% endblock %}
+
+  <!-- body -->
+
+    <!-- insert chart -->
+    <div id="chart" class="chart"></div>
+
+    <!-- add new destination -->
+    <FORM>
+      <p>Insert new destination here: </p>
+      <p>
+      <INPUT TYPE="Text" placeholder="Place" ID="TextField1">
+      <P>
+      <INPUT TYPE="Text" placeholder="Year (If Not this Year)" ID="TextField2">
+      <button type="button" onclick="submitFunction(document.getElementById('TextField1').value,document.getElementById('TextField2').value)">Submit</button>
+    </FORM>
+
+    <!-- adding for plotly -->
+     <!-- D3.js -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+     <!-- Plotly.js -->
+     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  
+     <script type="text/javascript">
+  
+        var graphs = {{graphJSON | safe}};
+        // follows: div-id, graph var, layout var - use {} if none to pass
+        Plotly.plot('chart',graphs,{}); 
+        
+     </script>
+
+     <script>
+    // ADD NEW DESTINATION
+    function submitFunction(TextField1, TextField2, TextField3) {
+      alert("You have added the destination: "+ TextField1 + ', in the year: ' + TextField2);
+
+      // interacting with flask route in runApp.py:
+      $.ajax({
+        type : 'POST',
+        url : "/background_process",
+        data : {'data':TextField1, 'data2': TextField2,}
+      });
+    }
+  </script>
+
+  <!-- Footer -->
+<p class=footer style=color:#377ba8>Matthew Brandeburg 2020</p>
+</div>
+
+{% endblock %}
