@@ -3,8 +3,10 @@
 {% block styles %}
   {{super()}}
 <head>
+  <div class='container'>
     <title>Places I've Been Map</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  </div>
 </head>
 {% endblock %}
 
@@ -14,14 +16,16 @@
     <div id="chart" class="chart"></div>
 
     <!-- add new destination -->
+    <div class="container">
     <FORM>
       <p>Insert new destination here: </p>
       <p>
       <INPUT TYPE="Text" placeholder="Place" ID="TextField1">
       <P>
-      <INPUT TYPE="Text" placeholder="Year (If Not this Year)" ID="TextField2">
+      <INPUT TYPE="Text" placeholder="Year - If Not this Year (Optional)" ID="TextField2">
       <button type="button" onclick="submitFunction(document.getElementById('TextField1').value,document.getElementById('TextField2').value)">Submit</button>
     </FORM>
+    </div>
 
     <!-- adding for plotly -->
      <!-- D3.js -->
@@ -53,6 +57,7 @@
   </script>
 
   <!-- Footer -->
+<div class="container">
 <p class=footer style=color:#377ba8>Matthew Brandeburg 2020</p>
 </div>
 

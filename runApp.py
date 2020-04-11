@@ -1,3 +1,5 @@
+## How to push example: gp 'added div containers for Heroku' && git push heroku master
+
 import pandas as pd
 import os, json, plotly, mapBuilder
 from flask import Flask, render_template, request, send_from_directory, redirect
