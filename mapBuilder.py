@@ -55,6 +55,7 @@ def buildDF():
     initialDF = addTrip('Vatican City', 2019)
     initialDF = addTrip('France', 2019)
     initialDF = addTrip('Vietnam', 2019)
+    initialDF = addTrip('Hong Kong', 2019)
     initialDF = addTrip('Kenya', 2020)
 
     ## Extend places lived by a few shades
