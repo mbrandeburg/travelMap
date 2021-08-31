@@ -48,7 +48,7 @@ CMR,Cameroon,0,N/A
 COD,"Congo, Democratic Republic of the",0,N/A
 COG,Congo,0,N/A
 COK,Cook Islands,0,N/A
-COL,Colombia,0,N/A
+COL,Colombia,1,[2021]
 COM,Comoros,0,N/A
 CPV,Cabo Verde,0,N/A
 CRI,Costa Rica,1,[2010]
@@ -95,7 +95,7 @@ GTM,Guatemala,0,N/A
 GUF,French Guiana,0,N/A
 GUM,Guam,0,N/A
 GUY,Guyana,0,N/A
-HKG,Hong Kong,0,N/A
+HKG,Hong Kong,1,[2019]
 HMD,Heard Island and McDonald Islands,0,N/A
 HND,Honduras,0,N/A
 HRV,Croatia,0,N/A
@@ -179,7 +179,7 @@ PHL,Philippines,0,N/A
 PLW,Palau,0,N/A
 PNG,Papua New Guinea,0,N/A
 POL,Poland,0,N/A
-PRI,Puerto Rico,0,N/A
+PRI,Puerto Rico,1,[2021]
 PRK,Korea (Democratic People's Republic of),0,N/A
 PRT,Portugal,2,"['2011', 2017]"
 PRY,Paraguay,0,N/A
