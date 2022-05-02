@@ -39,5 +39,5 @@ def test():
 
 ### INITAITE IT VIA FLASK
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0', port=5001)
-    app.run() ##Unspecifying for heroku 
+    app.run(host='0.0.0.0', port=5001)
+    # app.run() ##Unspecifying for heroku 
