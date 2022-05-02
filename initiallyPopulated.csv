@@ -31,7 +31,7 @@ BLR,Belarus,0,N/A
 BLZ,Belize,0,N/A
 BMU,Bermuda,0,N/A
 BOL,Bolivia (Plurinational State of),0,N/A
-BRA,Brazil,0,N/A
+BRA,Brazil,1,[2022]
 BRB,Barbados,0,N/A
 BRN,Brunei Darussalam,0,N/A
 BTN,Bhutan,0,N/A
@@ -74,11 +74,11 @@ ETH,Ethiopia,0,N/A
 FIN,Finland,0,N/A
 FJI,Fiji,0,N/A
 FLK,Falkland Islands (Malvinas),0,N/A
-FRA,France,6,"['Summer of 2010', ' 2011', 2019]"
+FRA,France,6,"['Summer of 2010', '2011', 2019]"
 FRO,Faroe Islands,0,N/A
 FSM,Micronesia (Federated States of),0,N/A
 GAB,Gabon,0,N/A
-GBR,United Kingdom of Great Britain (U.K.),2,"['2010', 2017]"
+GBR,United Kingdom of Great Britain (U.K.),3,"['2010', 2017, 2022]"
 GEO,Georgia,0,N/A
 GGY,Guernsey,0,N/A
 GHA,Ghana,0,N/A
