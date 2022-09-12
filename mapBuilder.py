@@ -59,6 +59,9 @@ def buildDF():
     initialDF = addTrip('Kenya', 2020)
     initialDF = addTrip('Puerto Rico', 2021)
     initialDF = addTrip('Colombia', 2021)
+    initialDF = addTrip('Brazil', 2022)
+    initialDF = addTrip('United Kingdom', 2022)
+    initialDF = addTrip('Canada', 2022)
 
     ## Extend places lived by a few shades
     initialDF['Have Been'][initialDF['Code'] == 'FRA'] += 3 ## Just a summer
