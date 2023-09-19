@@ -38,7 +38,7 @@ BTN,Bhutan,0,N/A
 BVT,Bouvet Island,0,N/A
 BWA,Botswana,0,N/A
 CAF,Central African Republic,0,N/A
-CAN,Canada,0,N/A
+CAN,Canada,1,[2022]
 CCK,Cocos (Keeling) Islands,0,N/A
 CHE,Switzerland,0,N/A
 CHL,Chile,0,N/A
@@ -48,7 +48,7 @@ CMR,Cameroon,0,N/A
 COD,"Congo, Democratic Republic of the",0,N/A
 COG,Congo,0,N/A
 COK,Cook Islands,0,N/A
-COL,Colombia,1,[2021]
+COL,Colombia,2,"['2021', 2023]"
 COM,Comoros,0,N/A
 CPV,Cabo Verde,0,N/A
 CRI,Costa Rica,1,[2010]
@@ -68,17 +68,17 @@ ECU,Ecuador,0,N/A
 EGY,Egypt,1,[2018]
 ERI,Eritrea,0,N/A
 ESH,Western Sahara,0,N/A
-ESP,Spain,7,"['Study Abroad 2011-2012', 2017]"
+ESP,Spain,8,"['Study Abroad 2011-2012', ' 2017', 2023]"
 EST,Estonia,0,N/A
 ETH,Ethiopia,0,N/A
 FIN,Finland,0,N/A
 FJI,Fiji,0,N/A
 FLK,Falkland Islands (Malvinas),0,N/A
-FRA,France,6,"['Summer of 2010', '2011', 2019]"
+FRA,France,6,"['Summer of 2010', ' 2011', 2019]"
 FRO,Faroe Islands,0,N/A
 FSM,Micronesia (Federated States of),0,N/A
 GAB,Gabon,0,N/A
-GBR,United Kingdom of Great Britain (U.K.),3,"['2010', 2017, 2022]"
+GBR,United Kingdom of Great Britain (U.K.),3,"['2010', ' 2017', 2022]"
 GEO,Georgia,0,N/A
 GGY,Guernsey,0,N/A
 GHA,Ghana,0,N/A
@@ -141,7 +141,7 @@ MCO,Monaco,0,N/A
 MDA,"Moldova, Republic of",0,N/A
 MDG,Madagascar,0,N/A
 MDV,Maldives,0,N/A
-MEX,Mexico,2,"['2007', 2013]"
+MEX,Mexico,3,"['2007', ' 2013', 2022]"
 MHL,Marshall Islands,0,N/A
 MKD,North Macedonia,0,N/A
 MLI,Mali,0,N/A
