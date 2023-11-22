@@ -1,6 +1,6 @@
 # docker build -t travelmap:v1 .
 # docker run -p 5001:5001 <image>
-FROM python:3.11-alpine
+FROM --platform=$BUILDPLATFORM python:3.11-alpine AS builder
 RUN pip install --upgrade pip
 
 WORKDIR /app
