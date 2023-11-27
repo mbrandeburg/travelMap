@@ -147,7 +147,8 @@ def buildMap():
     except: ## if it doesn't exist yet, then use seeded DF above
         df = buildDF()
     df['Year Went'] = df['Year Went'].fillna('N/A')
-    fig = px.choropleth(df, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=px.colors.sequential.Mint) #["green",'yellow','orange',"red"]) #px.colors.sequential.Plasma)
+    # fig = px.choropleth(df, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=px.colors.sequential.Mint) #["green",'yellow','orange',"red"]) #px.colors.sequential.Plasma)
+    fig = px.choropleth(df, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=['white', 'rgb(180, 217, 204)', 'rgb(137, 192, 182)', 'rgb(99, 166, 160)', 'rgb(68, 140, 138)', 'rgb(40, 114, 116)', 'rgb(13, 88, 95)']) # mint adapted
     fig.update_layout(
         title = "Places I've Been",
         coloraxis_showscale=False,
