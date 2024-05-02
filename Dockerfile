@@ -11,7 +11,13 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . /app
 
+# Will be mounted in for persistence as a PV
+VOLUME /mnt
+COPY *Tracker* /mnt
+
 RUN adduser -D worker
+RUN chown -R worker:worker /mnt/
+
 USER worker
 WORKDIR /app
 

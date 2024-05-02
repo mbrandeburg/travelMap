@@ -2,6 +2,7 @@
 import pandas as pd
 import plotly.express as px
 from fuzzywuzzy import process
+import os
 
 def buildDF():
     initialDF = pd.read_csv('countryCodes.csv')
@@ -12,7 +13,7 @@ def buildDF():
     initialDF['Year Went'][initialDF['Code'] == 'USA'] = 'Home'
 
     ## Add Base Trips 
-    initialDF.to_csv('initiallyPopulated.csv', index=False)
+    initialDF.to_csv('/mnt/Travel Tracker - Main.csv', index=False)
     initialDF = addTrip('Bahamas', 2006)
     initialDF = addTrip('Mexico', 2007)
     initialDF = addTrip('Jamaica', 2007)
@@ -65,17 +66,19 @@ def buildDF():
     initialDF = addTrip('Mexico', 2022)
     initialDF = addTrip('Colombia', 2023)
     initialDF = addTrip('Spain', 2023)
+    initialDF = addTrip('Spain', 2024)
+    initialDF = addTrip('Morocco', 2024)
 
     ## Extend places lived by a few shades
     initialDF['Have Been'][initialDF['Code'] == 'FRA'] += 3 ## Just a summer
     initialDF['Have Been'][initialDF['Code'] == 'KOR'] += 5 ## One full year
     initialDF['Have Been'][initialDF['Code'] == 'ESP'] += 5 ## One full year
 
-    initialDF.to_csv('initiallyPopulated.csv', index=False)
+    initialDF.to_csv('/mnt/Travel Tracker - Main.csv', index=False)
     return initialDF
 
 def addTrip(country, yearWent):
-    df = pd.read_csv('initiallyPopulated.csv')
+    df = pd.read_csv('/mnt/Travel Tracker - Main.csv')
     dfCountryList = df['Country'].tolist()
     df['Year Went'] = df['Year Went'].fillna('N/A')
     counter = 0
@@ -136,16 +139,23 @@ def addTrip(country, yearWent):
         print('Unfortunately more than one country can meet the name given. Please specify between the following: ', *countryOptions, sep='\n- ')
         exit(1)
 
-    df.to_csv('initiallyPopulated.csv', index=False) ## overwrites each time
+    df.to_csv('/mnt/Travel Tracker - Main.csv', index=False) ## overwrites each time
     return df
 
 
 ##  Render everything
 def buildMap():
     try:
-        df = pd.read_csv('initiallyPopulated.csv')
-    except: ## if it doesn't exist yet, then use seeded DF above
-        df = buildDF()
+        df = pd.read_csv('/mnt/Travel Tracker - Main.csv')
+    except:
+        # Try to see if its a mnt issue?
+        os.system('cp Travel*.csv /mnt/')
+        try:
+            df = pd.read_csv('/mnt/Travel Tracker - Main.csv')
+        except: ## if it doesn't exist yet, then use seeded DF above
+            df = buildDF()
+
+
     df['Year Went'] = df['Year Went'].fillna('N/A')
     # fig = px.choropleth(df, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=px.colors.sequential.Mint) #["green",'yellow','orange',"red"]) #px.colors.sequential.Plasma)
     fig = px.choropleth(df, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=['white', 'rgb(180, 217, 204)', 'rgb(137, 192, 182)', 'rgb(99, 166, 160)', 'rgb(68, 140, 138)', 'rgb(40, 114, 116)', 'rgb(13, 88, 95)']) # mint adapted

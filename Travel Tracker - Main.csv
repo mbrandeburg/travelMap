@@ -1,0 +1,250 @@
+Code,Country,Have Been,Year Went
+ABW,Aruba,0,N/A
+AFG,Afghanistan,0,N/A
+AGO,Angola,0,N/A
+AIA,Anguilla,0,N/A
+ALA,Åland Islands,0,N/A
+ALB,Albania,0,N/A
+AND,Andorra,1,[2011]
+ARE,United Arab Emirates,0,N/A
+ARG,Argentina,1,[2016]
+ARM,Armenia,0,N/A
+ASM,American Samoa,0,N/A
+ATA,Antarctica,0,N/A
+ATF,French Southern Territories,0,N/A
+ATG,Antigua and Barbuda,0,N/A
+AUS,Australia,0,N/A
+AUT,Austria,0,N/A
+AZE,Azerbaijan,0,N/A
+BDI,Burundi,0,N/A
+BEL,Belgium,0,N/A
+BEN,Benin,0,N/A
+BES,"Bonaire, Sint Eustatius and Saba",0,N/A
+BFA,Burkina Faso,0,N/A
+BGD,Bangladesh,0,N/A
+BGR,Bulgaria,0,N/A
+BHR,Bahrain,0,N/A
+BHS,Bahamas,1,[2006]
+BIH,Bosnia and Herzegovina,0,N/A
+BLM,Saint Barthélemy,0,N/A
+BLR,Belarus,0,N/A
+BLZ,Belize,0,N/A
+BMU,Bermuda,0,N/A
+BOL,Bolivia (Plurinational State of),0,N/A
+BRA,Brazil,1,[2022]
+BRB,Barbados,0,N/A
+BRN,Brunei Darussalam,0,N/A
+BTN,Bhutan,0,N/A
+BVT,Bouvet Island,0,N/A
+BWA,Botswana,0,N/A
+CAF,Central African Republic,0,N/A
+CAN,Canada,1,[2022]
+CCK,Cocos (Keeling) Islands,0,N/A
+CHE,Switzerland,0,N/A
+CHL,Chile,0,N/A
+CHN,China,1,[2018]
+CIV,Côte d'Ivoire,0,N/A
+CMR,Cameroon,0,N/A
+COD,"Congo, Democratic Republic of the",0,N/A
+COG,Congo,0,N/A
+COK,Cook Islands,0,N/A
+COL,Colombia,2,"['2021', 2023]"
+COM,Comoros,0,N/A
+CPV,Cabo Verde,0,N/A
+CRI,Costa Rica,1,[2010]
+CUB,Cuba,0,N/A
+CUW,Curaçao,0,N/A
+CXR,Christmas Island,0,N/A
+CYM,Cayman Islands,1,[2007]
+CYP,Cyprus,0,N/A
+CZE,Czechia,0,N/A
+DEU,Germany,3,"['2010', ' 2016', 2018]"
+DJI,Djibouti,0,N/A
+DMA,Dominica,0,N/A
+DNK,Denmark,0,N/A
+DOM,Dominican Republic,0,N/A
+DZA,Algeria,0,N/A
+ECU,Ecuador,0,N/A
+EGY,Egypt,1,[2018]
+ERI,Eritrea,0,N/A
+ESH,Western Sahara,0,N/A
+ESP,Spain,9,"['Study Abroad 2011-2012', '  2017', ' 2023', 2024]"
+EST,Estonia,0,N/A
+ETH,Ethiopia,0,N/A
+FIN,Finland,0,N/A
+FJI,Fiji,0,N/A
+FLK,Falkland Islands (Malvinas),0,N/A
+FRA,France,6,"['Summer of 2010', ' 2011', 2019]"
+FRO,Faroe Islands,0,N/A
+FSM,Micronesia (Federated States of),0,N/A
+GAB,Gabon,0,N/A
+GBR,United Kingdom of Great Britain (U.K.),3,"['2010', ' 2017', 2022]"
+GEO,Georgia,0,N/A
+GGY,Guernsey,0,N/A
+GHA,Ghana,0,N/A
+GIB,Gibraltar,0,N/A
+GIN,Guinea,0,N/A
+GLP,Guadeloupe,0,N/A
+GMB,Gambia,0,N/A
+GNB,Guinea-Bissau,0,N/A
+GNQ,Equatorial Guinea,0,N/A
+GRC,Greece,1,[2009]
+GRD,Grenada,0,N/A
+GRL,Greenland,0,N/A
+GTM,Guatemala,0,N/A
+GUF,French Guiana,0,N/A
+GUM,Guam,0,N/A
+GUY,Guyana,0,N/A
+HKG,Hong Kong,1,[2019]
+HMD,Heard Island and McDonald Islands,0,N/A
+HND,Honduras,0,N/A
+HRV,Croatia,0,N/A
+HTI,Haiti,1,[2009]
+HUN,Hungary,0,N/A
+IDN,Indonesia,0,N/A
+IMN,Isle of Man,0,N/A
+IND,India,0,N/A
+IOT,British Indian Ocean Territory,0,N/A
+IRL,Ireland,1,[2011]
+IRN,Iran (Islamic Republic of),0,N/A
+IRQ,Iraq,0,N/A
+ISL,Iceland,0,N/A
+ISR,Israel,1,[2015]
+ITA,Italy,2,"['2009', 2019]"
+JAM,Jamaica,1,[2007]
+JEY,Jersey,0,N/A
+JOR,Jordan,1,[2018]
+JPN,Japan,3,"['2014', ' 2014', 2017]"
+KAZ,Kazakhstan,0,N/A
+KEN,Kenya,1,[2020]
+KGZ,Kyrgyzstan,0,N/A
+KHM,Cambodia,0,N/A
+KIR,Kiribati,0,N/A
+KNA,Saint Kitts and Nevis,0,N/A
+KOR,"Korea, Republic of",6,['Worked 2013-2014']
+KWT,Kuwait,0,N/A
+LAO,Lao People's Democratic Republic,0,N/A
+LBN,Lebanon,0,N/A
+LBR,Liberia,0,N/A
+LBY,Libya,0,N/A
+LCA,Saint Lucia,0,N/A
+LIE,Liechtenstein,0,N/A
+LKA,Sri Lanka,0,N/A
+LSO,Lesotho,0,N/A
+LTU,Lithuania,0,N/A
+LUX,Luxembourg,0,N/A
+LVA,Latvia,0,N/A
+MAC,Macao,0,N/A
+MAF,Saint Martin (French part),0,N/A
+MAR,Morocco,1,[2024]
+MCO,Monaco,0,N/A
+MDA,"Moldova, Republic of",0,N/A
+MDG,Madagascar,0,N/A
+MDV,Maldives,0,N/A
+MEX,Mexico,3,"['2007', ' 2013', 2022]"
+MHL,Marshall Islands,0,N/A
+MKD,North Macedonia,0,N/A
+MLI,Mali,0,N/A
+MLT,Malta,0,N/A
+MMR,Myanmar,0,N/A
+MNE,Montenegro,0,N/A
+MNG,Mongolia,0,N/A
+MNP,Northern Mariana Islands,0,N/A
+MOZ,Mozambique,0,N/A
+MRT,Mauritania,0,N/A
+MSR,Montserrat,0,N/A
+MTQ,Martinique,0,N/A
+MUS,Mauritius,0,N/A
+MWI,Malawi,0,N/A
+MYS,Malaysia,0,N/A
+MYT,Mayotte,0,N/A
+NAM,Namibia,0,N/A
+NCL,New Caledonia,0,N/A
+NER,Niger,0,N/A
+NFK,Norfolk Island,0,N/A
+NGA,Nigeria,0,N/A
+NIC,Nicaragua,0,N/A
+NIU,Niue,0,N/A
+NLD,Netherlands,2,"['2012', 2012]"
+NOR,Norway,0,N/A
+NPL,Nepal,0,N/A
+NRU,Nauru,0,N/A
+NZL,New Zealand,0,N/A
+OMN,Oman,0,N/A
+PAK,Pakistan,0,N/A
+PAN,Panama,0,N/A
+PCN,Pitcairn,0,N/A
+PER,Peru,0,N/A
+PHL,Philippines,0,N/A
+PLW,Palau,0,N/A
+PNG,Papua New Guinea,0,N/A
+POL,Poland,0,N/A
+PRI,Puerto Rico,1,[2021]
+PRK,Korea (Democratic People's Republic of),0,N/A
+PRT,Portugal,2,"['2011', 2017]"
+PRY,Paraguay,0,N/A
+PSE,"Palestine, State of",1,[2015]
+PYF,French Polynesia,0,N/A
+QAT,Qatar,0,N/A
+REU,Réunion,0,N/A
+ROU,Romania,0,N/A
+RUS,Russian Federation,0,N/A
+RWA,Rwanda,0,N/A
+SAU,Saudi Arabia,0,N/A
+SDN,Sudan,0,N/A
+SEN,Senegal,1,[2016]
+SGP,Singapore,0,N/A
+SGS,South Georgia and the South Sandwich Islands,0,N/A
+SHN,"Saint Helena, Ascension and Tristan da Cunha",0,N/A
+SJM,Svalbard and Jan Mayen,0,N/A
+SLB,Solomon Islands,0,N/A
+SLE,Sierra Leone,0,N/A
+SLV,El Salvador,0,N/A
+SMR,San Marino,0,N/A
+SOM,Somalia,0,N/A
+SPM,Saint Pierre and Miquelon,0,N/A
+SRB,Serbia,0,N/A
+SSD,South Sudan,0,N/A
+STP,Sao Tome and Principe,0,N/A
+SUR,Suriname,0,N/A
+SVK,Slovakia,0,N/A
+SVN,Slovenia,0,N/A
+SWE,Sweden,0,N/A
+SWZ,Eswatini,0,N/A
+SXM,Sint Maarten (Dutch part),0,N/A
+SYC,Seychelles,0,N/A
+SYR,Syrian Arab Republic,0,N/A
+TCA,Turks and Caicos Islands,0,N/A
+TCD,Chad,0,N/A
+TGO,Togo,0,N/A
+THA,Thailand,1,[2014]
+TJK,Tajikistan,0,N/A
+TKL,Tokelau,0,N/A
+TKM,Turkmenistan,0,N/A
+TLS,Timor-Leste,0,N/A
+TON,Tonga,0,N/A
+TTO,Trinidad and Tobago,0,N/A
+TUN,Tunisia,0,N/A
+TUR,Turkey,0,N/A
+TUV,Tuvalu,0,N/A
+TWN,Taiwan,0,N/A
+TZA,"Tanzania, United Republic of",0,N/A
+UGA,Uganda,0,N/A
+UKR,Ukraine,0,N/A
+UMI,United States Minor Outlying Islands,0,N/A
+URY,Uruguay,0,N/A
+USA,United States of America,7,Home
+UZB,Uzbekistan,0,N/A
+VAT,Holy See / Vatican City,2,"['2009', 2019]"
+VCT,Saint Vincent and the Grenadines,0,N/A
+VEN,Venezuela (Bolivarian Republic of),0,N/A
+VGB,Virgin Islands (British),0,N/A
+VIR,Virgin Islands (U.S.),0,N/A
+VNM,Viet Nam,1,[2019]
+VUT,Vanuatu,0,N/A
+WLF,Wallis and Futuna,0,N/A
+WSM,Samoa,0,N/A
+YEM,Yemen,0,N/A
+ZAF,South Africa,1,[2017]
+ZMB,Zambia,0,N/A
+ZWE,Zimbabwe,0,N/A
