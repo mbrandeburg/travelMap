@@ -3,6 +3,18 @@
 FROM --platform=$BUILDPLATFORM python:3.11-alpine AS build
 RUN pip install --upgrade pip
 
+# Bump due to Trivy identified vulnerability
+RUN pip install setuptools>=75.1.0
+
+# Install or update the fixed versions of vulnerable packages
+RUN apk add --no-cache \
+    busybox \
+    ssl_client\
+    busybox-binsh
+# Update the package index and upgrade existing packages
+RUN apk update && \
+    apk upgrade --no-cache
+
 WORKDIR /app
 
 COPY requirements.txt /app
