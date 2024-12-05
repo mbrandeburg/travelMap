@@ -18,10 +18,10 @@
   <!-- body -->
 
     <!-- insert chart -->
-    <div id="chart" class="chart"></div>
+    <div id="chart" class="chart" style="width: 100%; height: 60vh;"></div>
 
     <!-- add new destination -->
-    <div class="container">
+    <div class="container" style="width: 95%;">
     <FORM>
       <p>Insert new destination here: </p>
       <p>
@@ -42,6 +42,10 @@
      <script type="text/javascript">
   
         var graphs = {{graphJSON | safe}};
+        
+        // Update the Plotly configuration to be responsive
+        var plotlyConfig = { responsive: true };
+
         // follows: div-id, graph var, layout var - use {} if none to pass
         Plotly.plot('chart',graphs,{}); 
         
@@ -62,7 +66,7 @@
   </script>
 
   <!-- Footer -->
-<div class="container">
+<div class="container" style="width: 95%;">
 <p class=footer style=color:#377ba8>Matthew Brandeburg 2021</p>
 </div>
 
