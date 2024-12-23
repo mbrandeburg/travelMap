@@ -37,9 +37,13 @@
      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
      <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
      <!-- Plotly.js -->
-     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  
+     <script src="static/json/plotly-2.35.3/plotly.min.js" charset="utf-8"></script>
+     
      <script type="text/javascript">
+        // Set the path to world_110m.json -- which has vanished from min.js now
+        Plotly.setPlotConfig({
+            topojsonURL: '/static/json/plotly-2.35.3/' // Now using local path, e.g., '/static/json/'
+        });
   
         var graphs = {{graphJSON | safe}};
         
