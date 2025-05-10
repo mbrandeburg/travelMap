@@ -36,4 +36,12 @@ for i in {1..2}; do
     pip3 freeze >> requirements.txt
 done
 
+# Final dependency check
+echo "Running final pip check..."
+if ! pip check; then
+    echo "pip check failed — exiting with error."
+    exit 3  # exit code signaling dependency issues
+fi
+
 echo "Updates Complete!"
+exit 0
