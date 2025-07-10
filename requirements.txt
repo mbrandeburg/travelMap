@@ -9,11 +9,11 @@ itsdangerous==2.2.0
 Jinja2==3.1.6
 Levenshtein==0.27.1
 MarkupSafe==3.0.2
-narwhals==1.42.0
-numpy==2.3.0
+narwhals==1.46.0
+numpy==2.3.1
 packaging==25.0
-pandas==2.3.0
-plotly==6.1.2
+pandas==2.3.1
+plotly==6.2.0
 python-dateutil==2.9.0.post0
 python-Levenshtein==0.27.1
 pytz==2025.2
