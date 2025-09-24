@@ -14,13 +14,29 @@ app.secret_key = 'your-secret-key-change-this'  # Add secret key for flash messa
 
 def calculate_stats(df):
     """Calculate travel statistics from the dataframe"""
-    visited_countries = len(df[df['Have Been'] > 0])
-    total_trips = df[df['Have Been'] > 0]['Have Been'].sum()
+    # Exclude USA from counts since it's home country, not travel
+    travel_df = df[df['Code'] != 'USA']
+    
+    visited_countries = len(travel_df[travel_df['Have Been'] > 0])
+    
+    # Count actual trips by parsing the "Year Went" column instead of using inflated "Have Been" values
+    total_trips = 0
+    for _, row in travel_df.iterrows():
+        if row['Have Been'] > 0 and row['Year Went'] != 'N/A':
+            year_went = str(row['Year Went'])
+            if ',' in year_went:
+                # Multiple trips - count each entry in the list
+                years_list = year_went.replace('[', '').replace(']', '').replace("'", '').split(', ')
+                total_trips += len([y for y in years_list if y.strip()])
+            else:
+                # Single trip
+                total_trips += 1
     
     # Calculate years of traveling (from first trip to most recent)
     years_data = []
     for _, row in df.iterrows():
-        if row['Have Been'] > 0 and row['Year Went'] != 'N/A':
+        # Exclude USA from years calculation since it's home country
+        if row['Have Been'] > 0 and row['Year Went'] != 'N/A' and row['Code'] != 'USA':
             year_went = str(row['Year Went'])
             if ',' in year_went:
                 # Multiple years
