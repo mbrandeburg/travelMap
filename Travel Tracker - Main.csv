@@ -78,7 +78,7 @@ FRA,France,6,"['Summer of 2010', ' 2011', 2019]"
 FRO,Faroe Islands,0,N/A
 FSM,Micronesia (Federated States of),0,N/A
 GAB,Gabon,0,N/A
-GBR,United Kingdom of Great Britain (U.K.),3,"['2010', ' 2017', 2022]"
+GBR,United Kingdom of Great Britain (U.K.),4,"['2010', ' 2017', 2022,2025]"
 GEO,Georgia,0,N/A
 GGY,Guernsey,0,N/A
 GHA,Ghana,0,N/A
@@ -181,7 +181,7 @@ PNG,Papua New Guinea,0,N/A
 POL,Poland,0,N/A
 PRI,Puerto Rico,1,[2021]
 PRK,Korea (Democratic People's Republic of),0,N/A
-PRT,Portugal,2,"['2011', 2017]"
+PRT,Portugal,3,"['2011', 2017, 2024]"
 PRY,Paraguay,0,N/A
 PSE,"Palestine, State of",1,[2015]
 PYF,French Polynesia,0,N/A

@@ -1,24 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "bootstrap/base.html" %}
+{% block content %}
+{% block styles %}
+  {{super()}}
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Upload New Travel Tracker CSV File</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-    <!-- back button -->
-  <button onclick="goBack()">Go Back</button>
-  <script>
-  function goBack() {
-    window.history.back();
-  }
-  </script>
+{% endblock %}
 
-    <h1>Upload a New Travel Tracker CSV</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".csv">
-        <input type="submit" value="Upload">
-    </form>
+<!-- navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  <div class="container">
+    <a href="/" class="navbar-brand" style="color: white; font-weight: bold; font-size: 1.5rem; text-decoration: none;">
+      <i class="fas fa-globe-americas me-2"></i>Matthew's Travels
+    </a>
+    <a class="btn btn-outline-light" href="/" style="border-radius: 25px;">
+      <i class="fas fa-arrow-left me-2"></i>Back to Map
+    </a>
+  </div>
+</nav>
+
+<div class="main-content">
+    <div class="container" style="max-width: 800px; margin: 3rem auto;">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-upload me-2"></i>Upload New Travel Data</h2>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-warning">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
+                <p class="mb-4">Upload a CSV file to update your travel data. The file should have the same format as your current travel tracker.</p>
+                
+                <form action="/upload" method="post" enctype="multipart/form-data" class="upload-form">
+                    <div class="form-group">
+                        <label for="file-input" class="form-label">
+                            <i class="fas fa-file-csv me-2"></i>Choose CSV File
+                        </label>
+                        <input type="file" name="file" id="file-input" accept=".csv" class="form-control" required>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-upload me-2"></i>Upload File
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-4 text-muted">
+                    <small>
+                        <i class="fas fa-info-circle me-2"></i>
+                        Make sure your CSV file contains columns: Country, Code, Have Been, Year Went
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
+
+{% endblock %}

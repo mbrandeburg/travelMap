@@ -6,31 +6,92 @@
   <div class='container'>
     <title>Places I've Been Map</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   </div>
 </head>
 {% endblock %}
-<!-- navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #377ba8">
-  <span class="navbar-brand" style="color: black"><b>Matthew's Travels</b></span>
-  <a class="navbar-brand btn btn-outline-light" style="color: white" href="/upload">Upload Updated List</a>
+<!-- navbar with improved styling -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  <div class="container">
+    <span class="navbar-brand" style="color: white; font-weight: bold; font-size: 1.5rem;">
+      <i class="fas fa-globe-americas me-2"></i>Matthew's Travels
+    </span>
+    <a class="btn btn-outline-light" href="/upload" style="border-radius: 25px;">
+      <i class="fas fa-upload me-2"></i>Upload Updated List
+    </a>
+  </div>
 </nav>
 
   <!-- body -->
-
-    <!-- insert chart -->
-    <div id="chart" class="chart" style="width: 100%; height: 60vh;"></div>
-
-    <!-- add new destination -->
-    <div class="container" style="width: 95%;">
-    <FORM>
-      <p>Insert new destination here: </p>
-      <p>
-      <INPUT TYPE="Text" placeholder="Place" ID="TextField1">
-      <P>
-      <INPUT TYPE="Text" placeholder="Year - If Not this Year (Optional)" ID="TextField2">
-      <button type="button" onclick="submitFunction(document.getElementById('TextField1').value,document.getElementById('TextField2').value)">Submit</button>
-    </FORM>
+  <div class="main-content">
+    <!-- insert chart with improved container -->
+    <div class="chart-container">
+      <div id="chart" class="chart"></div>
     </div>
+
+    <!-- Stats section -->
+    <div class="container stats-section">
+      <div class="row text-center">
+        <div class="col-md-4">
+          <div class="stat-card">
+            <i class="fas fa-map-marker-alt stat-icon"></i>
+            <h3 id="countries-visited">0</h3>
+            <p>Countries Visited</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <i class="fas fa-plane stat-icon"></i>
+            <h3 id="total-trips">0</h3>
+            <p>Total Trips</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <i class="fas fa-calendar-alt stat-icon"></i>
+            <h3 id="years-traveling">0</h3>
+            <p>Years Traveling</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- add new destination with improved styling -->
+    <div class="container add-destination-section">
+      <div class="card">
+        <div class="card-header">
+          <h4><i class="fas fa-plus-circle me-2"></i>Add New Destination</h4>
+        </div>
+        <div class="card-body">
+          <form id="destination-form">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="TextField1">Destination</label>
+                  <input type="text" class="form-control" placeholder="Enter country or place" id="TextField1" required>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="TextField2">Year (Optional)</label>
+                  <input type="text" class="form-control" placeholder="Leave blank for current year" id="TextField2">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                  <button type="button" class="btn btn-primary btn-block" onclick="submitFunction(document.getElementById('TextField1').value,document.getElementById('TextField2').value)">
+                    <i class="fas fa-plus me-2"></i>Add Trip
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- adding for plotly -->
      <!-- D3.js -->
@@ -48,30 +109,102 @@
         var graphs = {{graphJSON | safe}};
         
         // Update the Plotly configuration to be responsive
-        var plotlyConfig = { responsive: true };
+        var plotlyConfig = { 
+            responsive: true,
+            displayModeBar: true,
+            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
+            displaylogo: false
+        };
 
         // follows: div-id, graph var, layout var - use {} if none to pass
-        Plotly.newPlot('chart',graphs,{}); 
+        Plotly.newPlot('chart', graphs, {}, plotlyConfig); 
+        
+        // Calculate and display statistics
+        calculateStats();
+        
+        function calculateStats() {
+            // This would ideally get data from the backend, but for now we'll use placeholder values
+            // In a full implementation, you'd pass this data from the Flask route
+            document.getElementById('countries-visited').textContent = '{{ stats.countries if stats else "Loading..." }}';
+            document.getElementById('total-trips').textContent = '{{ stats.trips if stats else "Loading..." }}';
+            document.getElementById('years-traveling').textContent = '{{ stats.years if stats else "Loading..." }}';
+        }
         
      </script>
 
      <script>
-    // ADD NEW DESTINATION
+    // ADD NEW DESTINATION with improved UX
     function submitFunction(TextField1, TextField2, TextField3) {
-      alert("You have added the destination: "+ TextField1 + ', in the year: ' + TextField2);
-
-      // interacting with flask route in runApp.py:
-      $.ajax({
-        type : 'POST',
-        url : "/background_process",
-        data : {'data':TextField1, 'data2': TextField2,}
-      });
+      if (!TextField1 || TextField1.trim() === '') {
+        alert('Please enter a destination!');
+        return;
+      }
+      
+      const year = TextField2 || new Date().getFullYear();
+      const confirmMsg = `Are you sure you want to add "${TextField1}" for the year ${year}?`;
+      
+      if (confirm(confirmMsg)) {
+        // Show loading state
+        const submitBtn = event.target || document.querySelector('button[onclick*="submitFunction"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+        submitBtn.disabled = true;
+        
+        // interacting with flask route in runApp.py:
+        $.ajax({
+          type : 'POST',
+          url : "/background_process",
+          data : {'data': TextField1, 'data2': TextField2},
+          success: function(response) {
+            alert("Successfully added: " + TextField1 + ' (' + year + ')');
+            // Clear the form
+            document.getElementById('TextField1').value = '';
+            document.getElementById('TextField2').value = '';
+            // Refresh the page to show updated map
+            setTimeout(() => location.reload(), 1000);
+          },
+          error: function(xhr, status, error) {
+            alert("Error adding destination. Please try again.");
+            console.error('Error:', error);
+          },
+          complete: function() {
+            // Restore button state
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+          }
+        });
+      }
     }
+
+    // Add form submission on Enter key
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('destination-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          submitFunction(
+            document.getElementById('TextField1').value,
+            document.getElementById('TextField2').value
+          );
+        });
+      }
+    });
   </script>
 
   <!-- Footer -->
-<div class="container" style="width: 95%;">
-<p class=footer style=color:#377ba8>Matthew Brandeburg 2021</p>
-</div>
+<footer class="footer mt-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="footer-text">Matthew Brandeburg © 2025</p>
+      </div>
+      <div class="col-md-6 text-end">
+        <p class="footer-text">
+          <i class="fas fa-code me-2"></i>Built with Python, Flask & Plotly
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
 
 {% endblock %}

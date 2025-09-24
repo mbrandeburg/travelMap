@@ -1,16 +1,21 @@
 ## Map builder using plotly (run `-W ignore` since I force lists into cells for years visit visualization renderings.)
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from fuzzywuzzy import process
 import os
+import numpy as np
+import json
+from functools import lru_cache
 
 def buildDF():
     initialDF = pd.read_csv('countryCodes.csv')
     initialDF['Have Been'] = 0
     initialDF['Year Went'] = 'N/A'
 
-    initialDF['Have Been'][initialDF['Code'] == 'USA'] = 7 ## Infinity value
-    initialDF['Year Went'][initialDF['Code'] == 'USA'] = 'Home'
+    # Use loc for pandas 3.0 compatibility
+    initialDF.loc[initialDF['Code'] == 'USA', 'Have Been'] = 7  ## Infinity value
+    initialDF.loc[initialDF['Code'] == 'USA', 'Year Went'] = 'Home'
 
     ## Add Base Trips 
     initialDF.to_csv('/mnt/Travel Tracker - Main.csv', index=False)
@@ -70,14 +75,17 @@ def buildDF():
     initialDF = addTrip('Morocco', 2024)
 
     ## Extend places lived by a few shades
-    initialDF['Have Been'][initialDF['Code'] == 'FRA'] += 3 ## Just a summer
-    initialDF['Have Been'][initialDF['Code'] == 'KOR'] += 5 ## One full year
-    initialDF['Have Been'][initialDF['Code'] == 'ESP'] += 5 ## One full year
+    initialDF.loc[initialDF['Code'] == 'FRA', 'Have Been'] += 3  ## Just a summer
+    initialDF.loc[initialDF['Code'] == 'KOR', 'Have Been'] += 5  ## One full year
+    initialDF.loc[initialDF['Code'] == 'ESP', 'Have Been'] += 5  ## One full year
 
     initialDF.to_csv('/mnt/Travel Tracker - Main.csv', index=False)
     return initialDF
 
 def addTrip(country, yearWent):
+    # Clear cache when data changes
+    _get_cached_dataframe.cache_clear()
+    
     df = pd.read_csv('/mnt/Travel Tracker - Main.csv')
     dfCountryList = df['Country'].tolist()
     df['Year Went'] = df['Year Went'].fillna('N/A')
@@ -104,7 +112,7 @@ def addTrip(country, yearWent):
                 newlist.append(yearWent)
                 # print(newlist, len(newlist))
                 df.at[indexValue, 'Year Went'] = newlist
-                df['Have Been'][df['Country'] == item] = len(newlist)
+                df.loc[df['Country'] == item, 'Have Been'] = len(newlist)
     elif counter == 0:
         ## Do a fuzzy-ish matcher
         print('\n WARNING: EMPLOYING FUZZY MATCH. CHECK THE FOLLOWING RESULT WAS AS INTENDED:')
@@ -131,7 +139,7 @@ def addTrip(country, yearWent):
                                 newlist.append(foundItem.replace('[','').replace(']','').replace("'",''))
                     newlist.append(yearWent)
                     df.at[indexValue, 'Year Went'] = newlist
-                    df['Have Been'][df['Country'] == item] = len(newlist)
+                    df.loc[df['Country'] == item, 'Have Been'] = len(newlist)
         elif fuzzyCounter == 0:
             print('The country ** {} ** was not recognized. Please check spelling and try again. (The closest match was {})'.format(country,highest[0]))
             exit(1)
@@ -144,7 +152,9 @@ def addTrip(country, yearWent):
 
 
 ##  Render everything
-def buildMap():
+@lru_cache(maxsize=32)
+def _get_cached_dataframe():
+    """Cache the dataframe to improve performance"""
     try:
         df = pd.read_csv('/mnt/Travel Tracker - Main.csv')
     except:
@@ -154,23 +164,78 @@ def buildMap():
             df = pd.read_csv('/mnt/Travel Tracker - Main.csv')
         except: ## if it doesn't exist yet, then use seeded DF above
             df = buildDF()
+    return df
 
-
+def buildMap():
+    df = _get_cached_dataframe().copy()
     df['Year Went'] = df['Year Went'].fillna('N/A')
-    # fig = px.choropleth(df, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=px.colors.sequential.Mint) #["green",'yellow','orange',"red"]) #px.colors.sequential.Plasma)
-    fig = px.choropleth(df, locations="Code", color='Have Been', hover_name='Country',hover_data=['Year Went'],color_continuous_scale=['white', 'rgb(180, 217, 204)', 'rgb(137, 192, 182)', 'rgb(99, 166, 160)', 'rgb(68, 140, 138)', 'rgb(40, 114, 116)', 'rgb(13, 88, 95)']) # mint adapted
+    
+    # Create logarithmic scale for better visibility of countries with few visits
+    df['Log Visits'] = np.where(df['Have Been'] > 0, 
+                                np.log1p(df['Have Been']), # log1p = log(1 + x) to handle 0 values
+                                0)
+    
+    # Normalize the log scale to 0-10 range for better color mapping
+    max_log = df['Log Visits'].max()
+    if max_log > 0:
+        df['Log Visits Normalized'] = (df['Log Visits'] / max_log) * 10
+    else:
+        df['Log Visits Normalized'] = df['Log Visits']
+    
+    # Create custom hover text with better formatting
+    df['Hover Text'] = df.apply(lambda row: 
+        f"<b>{row['Country']}</b><br>"
+        f"Visits: {row['Have Been']}<br>"
+        f"Years: {row['Year Went'] if row['Year Went'] != 'N/A' else 'Never visited'}"
+        f"<extra></extra>", axis=1)
+    
+    # Create the choropleth map with improved styling
+    fig = go.Figure(data=go.Choropleth(
+        locations=df['Code'],
+        z=df['Log Visits Normalized'],
+        text=df['Country'],
+        hovertemplate=df['Hover Text'],
+        colorscale=[
+            [0.0, 'rgb(247, 247, 247)'],    # Very light gray for unvisited
+            [0.1, 'rgb(220, 245, 235)'],    # Very light mint
+            [0.3, 'rgb(180, 217, 204)'],    # Light mint
+            [0.5, 'rgb(137, 192, 182)'],    # Medium mint
+            [0.7, 'rgb(99, 166, 160)'],     # Darker mint
+            [0.85, 'rgb(68, 140, 138)'],    # Dark mint
+            [1.0, 'rgb(13, 88, 95)']        # Darkest mint
+        ],
+        colorbar=dict(
+            title="Visit Frequency (Log Scale)",
+            tickmode="array",
+            tickvals=[0, 2, 4, 6, 8, 10],
+            ticktext=["Never", "1", "2-3", "4-7", "8-15", "15+"],
+            len=0.7,
+            thickness=20
+        )
+    ))
+    
     fig.update_layout(
-        title = "Places I've Been",
-        coloraxis_showscale=False,
-        # # If I want to disable Automargins
-        # autosize=False,
-        # width=1500,
-        # height=450,
+        title={
+            'text': "Places I've Been - Interactive Travel Map",
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': {'size': 24, 'color': '#2c3e50'}
+        },
+        geo=dict(
+            showframe=False,
+            showcoastlines=True,
+            coastlinecolor="rgb(204, 204, 204)",
+            projection_type='natural earth'
+        ),
         font=dict(
-            family="Helvetica, monospace",
-            size=18,
-            color="#7f7f7f")
+            family="Arial, Helvetica, Ubuntu, sans-serif",
+            size=14,
+            color="#2c3e50"
+        ),
+        paper_bgcolor='rgb(248, 249, 250)',
+        plot_bgcolor='rgb(248, 249, 250)',
+        margin=dict(l=0, r=0, t=50, b=0),
+        height=600
     )
-    # fig.show()
-
+    
     return fig, df
