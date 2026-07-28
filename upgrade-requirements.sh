@@ -1,33 +1,27 @@
 #!/bin/bash
+set -e
 
-# Path to your virtual environment
-VENV_PATH="venv/bin/activate"
-
-# Path to your requirements.txt file
-REQUIREMENTS_FILE="requirements.txt"
-
-# Check if the virtual environment exists and activate it
-if [ -f "$VENV_PATH" ]; then
-    echo "Activating virtual environment..."
-    source "$VENV_PATH"
-else
-    echo "Virtual environment not found. Please ensure it is created at $VENV_PATH"
+# Ensure uv is available
+if ! command -v uv &> /dev/null; then
+    echo "uv not found. Install it: https://docs.astral.sh/uv/getting-started/installation/"
     exit 1
 fi
 
-# Fist update pip
-pip install --upgrade pip
+# Create/sync the venv (.venv) from pyproject.toml + uv.lock
+echo "Syncing virtual environment..."
+uv sync
 
-# Outer loop to repeat the process twice
-for i in {1..2}; do
-    echo "Run #$i: Installing packages..."
+# Upgrade all dependencies to their latest compatible versions
+echo "Upgrading all dependencies..."
+uv lock --upgrade
 
-    # Loop through each line in the requirements file
-    while IFS= read -r package; do
-        # Extract the package name before the '==' (if it exists)
-        pkg_name=$(echo "$package" | cut -d'=' -f1)
+# Re-sync the venv with the updated lockfile
+echo "Installing upgraded dependencies..."
+uv sync
 
-        echo "Installing/upgrading package: $pkg_name"
+echo "Updates complete! uv.lock has been updated."
+echo "Commit uv.lock so future Docker builds use these versions."
+exit 0
         pip3 install "$pkg_name" --upgrade
     done < "$REQUIREMENTS_FILE"
 

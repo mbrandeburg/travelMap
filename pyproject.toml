@@ -1,0 +1,20 @@
+[project]
+name = "travelmap"
+version = "0.1.0"
+description = "Flask app that visualizes countries I've visited on an interactive world map"
+readme = "readme.MD"
+requires-python = ">=3.12"
+dependencies = [
+    "Flask>=3.1",
+    "Flask-Bootstrap>=3.3",
+    "gunicorn>=23.0",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "plotly>=6.0",
+    "Werkzeug>=3.1",
+    "Jinja2>=3.1",
+]
+
+[tool.uv]
+# Application, not a library — don't try to build/install the project itself.
+package = false
