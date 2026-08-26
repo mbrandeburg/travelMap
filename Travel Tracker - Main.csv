@@ -57,7 +57,7 @@ CUW,Curaçao,0,N/A
 CXR,Christmas Island,0,N/A
 CYM,Cayman Islands,1,[2007]
 CYP,Cyprus,0,N/A
-CZE,Czechia,0,N/A
+CZE,Czechia,1,[2026]
 DEU,Germany,3,"['2010', ' 2016', 2018]"
 DJI,Djibouti,0,N/A
 DMA,Dominica,0,N/A
@@ -88,7 +88,7 @@ GLP,Guadeloupe,0,N/A
 GMB,Gambia,0,N/A
 GNB,Guinea-Bissau,0,N/A
 GNQ,Equatorial Guinea,0,N/A
-GRC,Greece,1,[2009]
+GRC,Greece,2,"['2009','2016']"
 GRD,Grenada,0,N/A
 GRL,Greenland,0,N/A
 GTM,Guatemala,0,N/A
@@ -225,7 +225,7 @@ TLS,Timor-Leste,0,N/A
 TON,Tonga,0,N/A
 TTO,Trinidad and Tobago,0,N/A
 TUN,Tunisia,0,N/A
-TUR,Turkey,0,N/A
+TUR,Turkey,1,[2026]
 TUV,Tuvalu,0,N/A
 TWN,Taiwan,0,N/A
 TZA,"Tanzania, United Republic of",0,N/A
@@ -233,7 +233,7 @@ UGA,Uganda,0,N/A
 UKR,Ukraine,0,N/A
 UMI,United States Minor Outlying Islands,0,N/A
 URY,Uruguay,0,N/A
-USA,United States of America,7,Home
+USA,United States of America,15,Home
 UZB,Uzbekistan,0,N/A
 VAT,Holy See / Vatican City,2,"['2009', 2019]"
 VCT,Saint Vincent and the Grenadines,0,N/A
