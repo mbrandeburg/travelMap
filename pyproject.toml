@@ -3,19 +3,28 @@ name = "travelmap"
 version = "0.1.0"
 description = "Flask app that visualizes countries I've visited on an interactive world map"
 readme = "readme.MD"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "Flask>=3.1",
     "Flask-Bootstrap>=3.3",
-    "fuzzywuzzy[speedup]>=0.18",
+    "rapidfuzz>=3.9",
     "gunicorn>=23.0",
-    "pandas>=2.2",
-    "numpy>=1.26",
+    "pandas>=3.0",
+    "numpy>=2.3.3",
     "plotly>=6.0",
     "Werkzeug>=3.1",
     "Jinja2>=3.1",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
 [tool.uv]
 # Application, not a library — don't try to build/install the project itself.
 package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

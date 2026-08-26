@@ -1,210 +1,253 @@
 {% extends "bootstrap/base.html" %}
-{% block content %}
+
+{% block title %}Places I've Been{% endblock %}
+
 {% block styles %}
-  {{super()}}
-<head>
-  <div class='container'>
-    <title>Places I've Been Map</title>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  </div>
-</head>
+  {{ super() }}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 {% endblock %}
-<!-- navbar with improved styling -->
-<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar">
   <div class="container">
-    <span class="navbar-brand" style="color: white; font-weight: bold; font-size: 1.5rem;">
+    <span class="navbar-brand app-brand">
       <i class="fas fa-globe-americas me-2"></i>Matthew's Travels
     </span>
-    <a class="btn btn-outline-light" href="/upload" style="border-radius: 25px;">
+    <a class="btn btn-outline-light app-nav-btn" href="/upload">
       <i class="fas fa-upload me-2"></i>Upload Updated List
     </a>
   </div>
 </nav>
 
-  <!-- body -->
-  <div class="main-content">
-    <!-- insert chart with improved container -->
-    <div class="chart-container">
-      <div id="chart" class="chart"></div>
+<div class="main-content">
+  <div class="container">
+    <!-- Map / List toggle (list view is easier to read on small screens) -->
+    <div class="view-toggle btn-group" role="group" aria-label="View toggle">
+      <button type="button" class="btn btn-primary active" id="btn-map-view">
+        <i class="fas fa-map me-2"></i>Map
+      </button>
+      <button type="button" class="btn btn-outline-primary" id="btn-list-view">
+        <i class="fas fa-list me-2"></i>List
+      </button>
     </div>
+  </div>
 
-    <!-- Stats section -->
-    <div class="container stats-section">
-      <div class="row text-center">
-        <div class="col-md-4">
-          <div class="stat-card">
-            <i class="fas fa-map-marker-alt stat-icon"></i>
-            <h3 id="countries-visited">0</h3>
-            <p>Countries Visited</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="stat-card">
-            <i class="fas fa-plane stat-icon"></i>
-            <h3 id="total-trips">0</h3>
-            <p>Total Trips (Larger Because of Repeat Visits)</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="stat-card">
-            <i class="fas fa-calendar-alt stat-icon"></i>
-            <h3 id="years-traveling">0</h3>
-            <p>Years Traveling</p>
-          </div>
+  <div class="chart-container" id="map-view">
+    <div id="chart" class="chart"></div>
+  </div>
+
+  <div class="container list-container" id="list-view" hidden>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" id="visited-table">
+        <thead>
+          <tr>
+            <th class="sortable-col" data-sort-type="text">Country <i class="fas fa-sort sort-icon"></i></th>
+            <th class="sortable-col text-center" data-sort-type="number">Trips <i class="fas fa-sort sort-icon"></i></th>
+            <th class="sortable-col" data-sort-type="number">Years <i class="fas fa-sort sort-icon"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in visited %}
+          <tr>
+            <td data-sort="{{ row.country }}">{{ row.country }}</td>
+            <td class="text-center" data-sort="{{ row.count }}">{{ row.count }}</td>
+            <td class="text-muted" data-sort="{{ row.latest }}">{{ row.years }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="container stats-section">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <i class="fas fa-map-marker-alt stat-icon"></i>
+          <h3>{{ stats.countries }}</h3>
+          <p>Countries Visited</p>
         </div>
       </div>
-    </div>
-
-    <!-- add new destination with improved styling -->
-    <div class="container add-destination-section">
-      <div class="card">
-        <div class="card-header">
-          <h4><i class="fas fa-plus-circle me-2"></i>Add New Destination</h4>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <i class="fas fa-plane stat-icon"></i>
+          <h3>{{ stats.trips }}</h3>
+          <p>Total Trips (Includes Repeat Visits)</p>
         </div>
-        <div class="card-body">
-          <form id="destination-form">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="TextField1">Destination</label>
-                  <input type="text" class="form-control" placeholder="Enter country or place" id="TextField1" required>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="TextField2">Year (Optional)</label>
-                  <input type="text" class="form-control" placeholder="Leave blank for current year" id="TextField2">
-                </div>
-              </div>
-              <div class="col-md-2">
-                <div class="form-group">
-                  <label>&nbsp;</label>
-                  <button type="button" class="btn btn-primary btn-block" onclick="submitFunction(document.getElementById('TextField1').value,document.getElementById('TextField2').value)">
-                    <i class="fas fa-plus me-2"></i>Add Trip
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <i class="fas fa-calendar-alt stat-icon"></i>
+          <h3>{{ stats.years }}</h3>
+          <p>Years Traveling</p>
         </div>
       </div>
     </div>
   </div>
 
-    <!-- adding for plotly -->
-     <!-- D3.js -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-     <!-- Plotly.js -->
-     <script src="static/json/plotly-2.35.3/plotly.min.js" charset="utf-8"></script>
-     
-     <script type="text/javascript">
-        // Set the path to world_110m.json -- which has vanished from min.js now
-        Plotly.setPlotConfig({
-            topojsonURL: '/static/json/plotly-2.35.3/' // Now using local path, e.g., '/static/json/'
-        });
-  
-        var graphs = {{graphJSON | safe}};
-        
-        // Update the Plotly configuration to be responsive
-        var plotlyConfig = { 
-            responsive: true,
-            displayModeBar: true,
-            modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d'],
-            displaylogo: false
-        };
+  <!-- Add a destination -->
+  <div class="container add-destination-section">
+    <div class="card">
+      <div class="card-header">
+        <h4><i class="fas fa-plus-circle me-2"></i>Add New Destination</h4>
+      </div>
+      <div class="card-body">
+        <form id="destination-form">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="TextField1">Destination</label>
+                <input type="text" class="form-control" placeholder="Enter country or place" id="TextField1" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="TextField2">Year (Optional)</label>
+                <input type="text" class="form-control" placeholder="Leave blank for current year" id="TextField2">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary btn-block" id="add-trip-btn">
+                  <i class="fas fa-plus me-2"></i>Add Trip
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-        // follows: div-id, graph var, layout var - use {} if none to pass
-        Plotly.newPlot('chart', graphs, {}, plotlyConfig); 
-        
-        // Calculate and display statistics
-        calculateStats();
-        
-        function calculateStats() {
-            // This would ideally get data from the backend, but for now we'll use placeholder values
-            // In a full implementation, you'd pass this data from the Flask route
-            document.getElementById('countries-visited').textContent = '{{ stats.countries if stats else "Loading..." }}';
-            document.getElementById('total-trips').textContent = '{{ stats.trips if stats else "Loading..." }}';
-            document.getElementById('years-traveling').textContent = '{{ stats.years if stats else "Loading..." }}';
-        }
-        
-     </script>
-
-     <script>
-    // ADD NEW DESTINATION with improved UX
-    function submitFunction(TextField1, TextField2, TextField3) {
-      if (!TextField1 || TextField1.trim() === '') {
-        alert('Please enter a destination!');
-        return;
-      }
-      
-      const year = TextField2 || new Date().getFullYear();
-      const confirmMsg = `Are you sure you want to add "${TextField1}" for the year ${year}?`;
-      
-      if (confirm(confirmMsg)) {
-        // Show loading state
-        const submitBtn = event.target || document.querySelector('button[onclick*="submitFunction"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
-        submitBtn.disabled = true;
-        
-        // interacting with flask route in runApp.py:
-        $.ajax({
-          type : 'POST',
-          url : "/background_process",
-          data : {'data': TextField1, 'data2': TextField2},
-          success: function(response) {
-            alert("Successfully added: " + TextField1 + ' (' + year + ')');
-            // Clear the form
-            document.getElementById('TextField1').value = '';
-            document.getElementById('TextField2').value = '';
-            // Refresh the page to show updated map
-            setTimeout(() => location.reload(), 1000);
-          },
-          error: function(xhr, status, error) {
-            alert("Error adding destination. Please try again.");
-            console.error('Error:', error);
-          },
-          complete: function() {
-            // Restore button state
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-          }
-        });
-      }
-    }
-
-    // Add form submission on Enter key
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('destination-form');
-      if (form) {
-        form.addEventListener('submit', function(e) {
-          e.preventDefault();
-          submitFunction(
-            document.getElementById('TextField1').value,
-            document.getElementById('TextField2').value
-          );
-        });
-      }
-    });
-  </script>
-
-  <!-- Footer -->
 <footer class="footer mt-5">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
-        <p class="footer-text">Matthew Brandeburg © 2025</p>
-      </div>
+      <div class="col-md-6"><p class="footer-text">Matthew Brandeburg &copy; 2025</p></div>
       <div class="col-md-6 text-end">
-        <p class="footer-text">
-          <i class="fas fa-code me-2"></i>Built with Python, Flask & Plotly
-        </p>
+        <p class="footer-text"><i class="fas fa-code me-2"></i>Built with Python, Flask &amp; Plotly</p>
       </div>
     </div>
   </div>
 </footer>
+{% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='json/plotly-geo-2.35.3.min.js') }}" charset="utf-8"></script>
+  <script>
+    // world_110m.json is served locally alongside the original Plotly bundle.
+    Plotly.setPlotConfig({ topojsonURL: '/static/json/plotly-2.35.3/' });
+
+    var graphs = {{ graphJSON | safe }};
+    var plotlyConfig = {
+      responsive: true,
+      displaylogo: false,
+      scrollZoom: false,
+      modeBarButtonsToRemove: ['lasso2d', 'select2d']
+    };
+    Plotly.newPlot('chart', graphs.data, graphs.layout, plotlyConfig);
+
+    // Map / List view toggle
+    (function () {
+      var mapBtn = document.getElementById('btn-map-view');
+      var listBtn = document.getElementById('btn-list-view');
+      var mapView = document.getElementById('map-view');
+      var listView = document.getElementById('list-view');
+
+      function showMap() {
+        listView.hidden = true;
+        mapView.hidden = false;
+        mapBtn.classList.add('active', 'btn-primary');
+        mapBtn.classList.remove('btn-outline-primary');
+        listBtn.classList.remove('active', 'btn-primary');
+        listBtn.classList.add('btn-outline-primary');
+        Plotly.Plots.resize('chart');
+      }
+      function showList() {
+        mapView.hidden = true;
+        listView.hidden = false;
+        listBtn.classList.add('active', 'btn-primary');
+        listBtn.classList.remove('btn-outline-primary');
+        mapBtn.classList.remove('active', 'btn-primary');
+        mapBtn.classList.add('btn-outline-primary');
+      }
+      mapBtn.addEventListener('click', showMap);
+      listBtn.addEventListener('click', showList);
+    })();
+
+    // Sortable list columns (Years sorts by most recent year)
+    (function () {
+      var table = document.getElementById('visited-table');
+      if (!table) return;
+      var headers = table.querySelectorAll('th.sortable-col');
+      var tbody = table.querySelector('tbody');
+
+      function setIcon(th, dir) {
+        var icon = th.querySelector('.sort-icon');
+        if (!icon) return;
+        icon.className = 'fas sort-icon '
+          + (dir === 'asc' ? 'fa-sort-up' : dir === 'desc' ? 'fa-sort-down' : 'fa-sort');
+      }
+
+      headers.forEach(function (th, index) {
+        th.addEventListener('click', function () {
+          var type = th.getAttribute('data-sort-type');
+          var asc = th.getAttribute('data-dir') !== 'asc';
+          headers.forEach(function (h) {
+            if (h !== th) { h.removeAttribute('data-dir'); setIcon(h, 'none'); }
+          });
+          th.setAttribute('data-dir', asc ? 'asc' : 'desc');
+          setIcon(th, asc ? 'asc' : 'desc');
+
+          var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+          rows.sort(function (a, b) {
+            var av = a.children[index].getAttribute('data-sort') || '';
+            var bv = b.children[index].getAttribute('data-sort') || '';
+            var cmp = type === 'number'
+              ? (parseFloat(av) || 0) - (parseFloat(bv) || 0)
+              : av.toLowerCase().localeCompare(bv.toLowerCase());
+            return asc ? cmp : -cmp;
+          });
+          rows.forEach(function (r) { tbody.appendChild(r); });
+        });
+      });
+    })();
+
+    // Add a destination
+    async function submitDestination() {
+      var country = document.getElementById('TextField1').value.trim();
+      var yearField = document.getElementById('TextField2').value.trim();
+      if (!country) { alert('Please enter a destination!'); return; }
+      var year = yearField || new Date().getFullYear();
+      if (!confirm('Add "' + country + '" for ' + year + '?')) return;
+
+      var btn = document.getElementById('add-trip-btn');
+      var original = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+      try {
+        var resp = await fetch('/background_process', {
+          method: 'POST',
+          body: new URLSearchParams({ data: country, data2: yearField })
+        });
+        var result = await resp.json().catch(function () { return {}; });
+        if (resp.ok && result.success) { location.reload(); return; }
+        alert(result.error || 'Error adding destination. Please try again.');
+      } catch (e) {
+        alert('Network error. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = original;
+      }
+    }
+
+    document.getElementById('destination-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      submitDestination();
+    });
+  </script>
 {% endblock %}

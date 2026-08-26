@@ -1,7 +1,7 @@
 # docker build -t travelmap:v1 .
 # docker run -p 5001:5001 <image>
 # syntax=docker/dockerfile:1
-FROM python:3.12-slim AS base
+FROM python:3.14-slim AS base
 
 # Install uv for fast dependency management
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
@@ -18,7 +18,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Put the venv on PATH so `python3` resolves to the synced env
 ENV PATH="/app/.venv/bin:$PATH" \
-    VIRTUAL_ENV="/app/.venv"
+    VIRTUAL_ENV="/app/.venv" \
+    TRAVEL_DATA_PATH="/mnt/Travel Tracker - Main.csv"
 
 # Copy application source
 COPY . /app

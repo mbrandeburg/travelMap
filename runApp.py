@@ -1,138 +1,138 @@
-## How to push example: gp 'added div containers for Heroku' && git push heroku master
-
-import pandas as pd
-import os, json, plotly, mapBuilder
-from flask import Flask, render_template, request, send_from_directory, redirect, flash, url_for, jsonify
-from flask_bootstrap import Bootstrap
+"""Flask entry point for the travel map app."""
+import os
+import re
+import json
 from datetime import datetime
-from werkzeug.utils import secure_filename
-import numpy as np
+
+import plotly
+from flask import (
+    Flask,
+    render_template,
+    request,
+    send_from_directory,
+    redirect,
+    flash,
+    url_for,
+    jsonify,
+)
+from flask_bootstrap import Bootstrap
+import pandas as pd
+
+import config
+import mapBuilder
 
 app = Flask(__name__)
 Bootstrap(app)
-app.secret_key = 'your-secret-key-change-this'  # Add secret key for flash messages
+app.secret_key = config.SECRET_KEY
+app.config["MAX_CONTENT_LENGTH"] = config.MAX_UPLOAD_BYTES
+
 
 def calculate_stats(df):
-    """Calculate travel statistics from the dataframe"""
-    # Exclude USA from counts since it's home country, not travel
-    travel_df = df[df['Code'] != 'USA']
-    
-    visited_countries = len(travel_df[travel_df['Have Been'] > 0])
-    
-    # Count actual trips by parsing the "Year Went" column instead of using inflated "Have Been" values
-    total_trips = 0
-    for _, row in travel_df.iterrows():
-        if row['Have Been'] > 0 and row['Year Went'] != 'N/A':
-            year_went = str(row['Year Went'])
-            if ',' in year_went:
-                # Multiple trips - count each entry in the list
-                years_list = year_went.replace('[', '').replace(']', '').replace("'", '').split(', ')
-                total_trips += len([y for y in years_list if y.strip()])
-            else:
-                # Single trip
-                total_trips += 1
-    
-    # Calculate years of traveling (from first trip to most recent)
-    years_data = []
-    for _, row in df.iterrows():
-        # Exclude USA from years calculation since it's home country
-        if row['Have Been'] > 0 and row['Year Went'] != 'N/A' and row['Code'] != 'USA':
-            year_went = str(row['Year Went'])
-            if ',' in year_went:
-                # Multiple years
-                years_list = year_went.replace('[', '').replace(']', '').replace("'", '').split(', ')
-                for year in years_list:
-                    try:
-                        years_data.append(int(year))
-                    except:
-                        # Handle non-numeric years like "Study Abroad 2011-2012"
-                        pass
-            else:
-                try:
-                    years_data.append(int(year_went))
-                except:
-                    pass
-    
-    if years_data:
-        years_traveling = max(years_data) - min(years_data) + 1
-    else:
-        years_traveling = 0
-    
-    return {
-        'countries': visited_countries,
-        'trips': int(total_trips),
-        'years': years_traveling
-    }
+    """Travel statistics derived from parsed trip labels (USA/home excluded)."""
+    travel = df[df["Code"] != "USA"]
+    countries = 0
+    trips = 0
+    years = []
+    for _, row in travel.iterrows():
+        labels = mapBuilder.parse_years(row["Year Went"])
+        if labels:
+            countries += 1
+            trips += len(labels)
+            for label in labels:
+                years.extend(int(y) for y in re.findall(r"\d{4}", str(label)))
+    years_traveling = (max(years) - min(years) + 1) if years else 0
+    return {"countries": countries, "trips": trips, "years": years_traveling}
 
-## FLASK RENDER THE WEBPAGE:
-@app.route('/upload', methods=['GET', 'POST'])
+
+def _is_valid_tracker(path):
+    """A tracker upload must parse as CSV and contain the required columns."""
+    try:
+        sample = pd.read_csv(path, nrows=5)
+    except Exception:
+        return False
+    return set(config.REQUIRED_COLUMNS).issubset(sample.columns)
+
+
+@app.route("/upload", methods=["GET", "POST"])
 def upload_file():
-    if request.method == 'POST':
-        # Check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
+    if request.method == "POST":
+        file = request.files.get("file")
+        if file is None or file.filename == "":
+            flash("No file selected.")
             return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file')
+        if not file.filename.lower().endswith(".csv"):
+            flash("Please upload a .csv file.")
             return redirect(request.url)
-        if file and file.filename.endswith('.csv'):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join('/mnt', 'Travel Tracker - Main.csv'))
-            return redirect(url_for('webFramesUnique'))
-    return render_template('upload.html')
+
+        # Save to a temp file, validate, then atomically swap into place.
+        config.DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
+        tmp = config.DATA_PATH.with_name(config.DATA_PATH.name + ".upload.tmp")
+        file.save(tmp)
+        if not _is_valid_tracker(tmp):
+            tmp.unlink(missing_ok=True)
+            flash("That CSV is missing required columns: " + ", ".join(config.REQUIRED_COLUMNS))
+            return redirect(request.url)
+        os.replace(tmp, config.DATA_PATH)
+        mapBuilder.invalidate_cache()
+        return redirect(url_for("webFramesUnique"))
+    return render_template(
+        "upload.html",
+        required_columns=", ".join(config.REQUIRED_COLUMNS),
+        max_mb=config.MAX_UPLOAD_BYTES // (1024 * 1024),
+    )
+
 
 @app.route("/")
 def webFramesUnique():
-    returnedValues = mapBuilder.buildMap()
-    fig = returnedValues[0]
-    df = returnedValues[1]
-    
-    # Calculate statistics
+    fig, df = mapBuilder.buildMap()
     stats = calculate_stats(df)
-    
+    visited = mapBuilder.visited_rows(df)
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('index.html', graphJSON=graphJSON, stats=stats)
+    return render_template("index.html", graphJSON=graphJSON, stats=stats, visited=visited)
 
-## favicon
-@app.route('/favicon.ico')
+
+@app.route("/favicon.ico")
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                          'favicon.ico',mimetype='image/vnd.microsoft.icon')
+    return send_from_directory(
+        os.path.join(app.root_path, "static"),
+        "favicon.ico",
+        mimetype="image/vnd.microsoft.icon",
+    )
 
-## background process for docker image retag and push
-@app.route('/background_process', methods=['POST']) #, methods=['GET','POST'])
-def test():
+
+@app.route("/background_process", methods=["POST"])
+def background_process():
+    country = request.form.get("data", "").strip()
+    year = request.form.get("data2", "").strip()
+    if not country:
+        return jsonify({"error": "Country name is required"}), 400
+
+    if not year:
+        year = datetime.now().year
+    else:
+        try:
+            year = int(year)
+        except ValueError:
+            pass  # keep as a label, e.g. "Study Abroad 2011-2012"
+
     try:
-        if request.method == "POST":
-            data = request.form.get('data', '').strip()
-            data2 = request.form.get('data2', '').strip()
-            
-            if not data:
-                return jsonify({'error': 'Country name is required'}), 400
-            
-            if len(data2) == 0:
-                data2 = datetime.now().year
-            else:
-                try:
-                    data2 = int(data2)
-                except ValueError:
-                    # Keep as string if it's not a number (e.g., "Study Abroad 2011-2012")
-                    pass
-            
-            # Add the trip
-            mapBuilder.addTrip(data, data2)
-            return jsonify({'success': True, 'message': f'Added {data} for {data2}'})
-            
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
-    return jsonify({'error': 'Invalid request'}), 400
+        mapBuilder.addTrip(country, year)
+    except mapBuilder.AmbiguousCountryError as exc:
+        return jsonify({"error": str(exc), "options": exc.options}), 400
+    except mapBuilder.CountryNotFoundError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception:  # noqa: BLE001 - last resort, don't leak internals
+        app.logger.exception("addTrip failed")
+        return jsonify({"error": "Could not add trip."}), 500
+
+    return jsonify({"success": True, "message": f"Added {country} ({year})"})
 
 
-### INITAITE IT VIA FLASK
+@app.errorhandler(413)
+def upload_too_large(_error):
+    flash(f"File too large (limit {config.MAX_UPLOAD_BYTES // (1024 * 1024)} MB).")
+    return redirect(url_for("upload_file"))
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001)
-    # app.run() ##Unspecifying for heroku 
+    app.run(host="0.0.0.0", port=5001)
